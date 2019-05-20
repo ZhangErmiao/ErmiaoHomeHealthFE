@@ -119,12 +119,12 @@
             </el-header>
             <el-main>
               <el-form  label-width="90px" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
-                <el-form-item  label="原始密码" prop="oldPass">
-                  <el-input  placeholder="请输入原始密码" type="password" v-model="ruleForm.oldPass"></el-input>
+                <el-form-item  label="原始密码" prop="password">
+                  <el-input  placeholder="请输入原始密码" type="password" v-model="ruleForm.password"></el-input>
                   <p id="err" v-show="err">原始密码错误</p>
                 </el-form-item>
-                <el-form-item  label="新密码" prop="newPass">
-                  <el-input  placeholder="请输入新密码" type="password" v-model="ruleForm.newPass"></el-input>
+                <el-form-item  label="新密码" prop="newPassword">
+                  <el-input  placeholder="请输入新密码" type="password" v-model="ruleForm.newPassword"></el-input>
                 </el-form-item><el-form-item  label="确认新密码" prop="checkNewPass">
                 <el-input  placeholder="请确认新密码" type="password" v-model="ruleForm.checkNewPass"></el-input>
               </el-form-item>
@@ -267,15 +267,15 @@ export default {
         iconUrl: require('../assets/b4.jpg') // 不写require图片路径会解析成静态资源，没有被编译
       },
       ruleForm: {
-        oldPass: '',
-        newPass: '',
+        password: '',
+        newPassword: '',
         checkNewPass: ''
       },
       rules: {
-        oldPass: [
+        password: [
           { validator: checkOldPass, trigger: 'blur' }
         ],
-        newPass: [
+        newPassword: [
           { validator: validatePass, trigger: 'blur' }
         ],
         checkNewPass: [
@@ -299,7 +299,10 @@ export default {
     submitForm (formName) { // 这部分还没写
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post('http://39.105.193.111:5000/user/login', this.ruleForm)
+          this.$http.put('http://39.105.193.111:5000/user/password', {'password':this.ruleForm.password,'newPassword':this.ruleForm.newPassword})
+            .then((res) => {
+              console.log(res)
+            })
         } else {
           console.log('error submit!!')
           return false

@@ -152,7 +152,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post('http://39.105.193.111:5000/group/', {'name': 'group_01'})
+          this.$http.post('http://39.105.193.111:5000/group/', this.newGroupForm)
             .then((res) => {
               console.log('请求成功', res)
               if (res.data.code === 200) {
@@ -209,6 +209,14 @@ export default {
         })
     },
     handleOpen (key, keyPath) { // 暂时没用
+      if (key === '2') {
+        this.$http.get('http://39.105.193.111:5000/group/all')
+          .then((res) => {
+            if (res.data.code === 200) {
+              console.log(res)
+            }
+          })
+      }
       console.log(keyPath)
     },
     handleSizeChange (val) {
