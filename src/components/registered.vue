@@ -167,7 +167,7 @@ export default {
   border-radius: 0;
   border-bottom: solid 2px #409EFF;
 }
-  el-form-item{
+  .el-form-item{
     margin: 20px 0;
   }
 </style>
