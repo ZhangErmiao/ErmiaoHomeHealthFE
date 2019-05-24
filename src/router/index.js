@@ -6,6 +6,9 @@ import About from '@/components/About'
 import Set from '@/components/Set'
 import Member from '@/components/Member'
 import Registered from '@/components/Registered'
+import HeartTest from '@/components/HeartTest'
+
+
 // import {ls} from '../store/pageStore.js'
 Vue.use(Router)
 
@@ -40,6 +43,11 @@ const router = new Router({
       path: '/member',
       name: 'Member',
       component: Member
+    },
+    {
+      path: '/heartTest',
+      name: 'HeartTest',
+      component: HeartTest
     }
   ]
 })

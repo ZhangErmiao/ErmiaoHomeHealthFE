@@ -14,7 +14,7 @@
           <el-input  placeholder="请输入用户名" v-model.number="ruleForm.username"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="render">
-          <el-select v-model="ruleForm.render" placeholder="请选择性别" >
+          <el-select v-model="ruleForm.gender" placeholder="请选择性别" >
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -54,7 +54,7 @@ export default {
         }
       }, 1000)
     }
-    let checkRender = (rule, value, callback) => {
+    let checkGender = (rule, value, callback) => {
       if (value === null) {
         return callback(new Error('请选择性别'))
       }
@@ -97,7 +97,7 @@ export default {
         }],
       ruleForm: {
         username: '',
-        render: null,
+        gender: null,
         password: '',
         checkPass: '',
         icon: 'http://www.dinghai.com/a.png'
@@ -106,8 +106,8 @@ export default {
         username: [
           { validator: checkName, trigger: 'blur' }
         ],
-        render: [
-          { validator: checkRender, trigger: 'blur' }
+        gender: [
+          { validator: checkGender, trigger: 'blur' }
         ],
         password: [
           { validator: validatePass, trigger: 'blur' }

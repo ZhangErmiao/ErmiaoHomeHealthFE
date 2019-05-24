@@ -16,13 +16,13 @@
       </el-header>
       <el-main style="padding: 0;">
         <el-container style="height: 700px; border: 1px solid gainsboro">
-          <el-aside width="191px">
+          <el-aside width="200px">
             <el-menu
               default-active="1"
               class="el-menu-vertical-demo"
               @open="handleOpen"
               @select="handleSelect"
-              style="height: 100%;width: 190px; ">
+              style="height: 100%;width: 198px; text-align: left">
               <el-menu-item index="1">
                 <i class="el-icon-edit-outline"></i>
                 <span slot="title">创建群组</span>
@@ -32,9 +32,10 @@
                   <i class="el-icon-school"></i>
                   <span>我的群组</span>
                 </template>
-                <el-menu-item-group>
-                  <el-menu-item index="2-1">相亲相爱一家人</el-menu-item>
-                  <el-menu-item index="2-2">我们是一家人</el-menu-item>
+                <el-menu-item-group style="text-align: left">
+                  <el-menu-item :index='id.toString()' :key="id" v-for="{id, groupName} in group">{{groupName}}
+                    <i class="el-icon-close" style="text-align: right" @click="deleteGroup(id)"></i>
+                  </el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
             </el-menu>
@@ -50,7 +51,7 @@
                 </el-breadcrumb>
               </el-header>
               <el-main>
-                <el-form :model="newGroupForm" status-icon ref="newGroupForm" label-width="100px">
+                <el-form :model="newGroupForm" :rules="rules" status-icon ref="newGroupForm" label-width="100px">
                   <el-form-item   label="群组名称" prop="name">
                     <el-input  placeholder="请输入群组名称" v-model.number="newGroupForm.name"></el-input>
                     <p id="err" v-show="err">用户名已存在</p>
@@ -67,32 +68,26 @@
           <template id="showMyGroup" v-if="contenter[1]">
             <el-container>
               <el-header >
-                <el-breadcrumb  id='path'>
+                <el-breadcrumb id="path">
                   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                   <el-breadcrumb-item>家庭成员管理</el-breadcrumb-item>
                 </el-breadcrumb>
-                <el-dropdown>
-                  <i class="el-icon-setting" style="margin-right: 15px"></i>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>新增成员</el-dropdown-item>
-                    <el-dropdown-item>批量删除</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
+                <i class="el-icon-plus" @click="addUser"></i>
               </el-header>
               <el-main style="padding-top: 0">
                 <el-table :data="tableData" height="550px">
-                  <el-table-column prop="date" label="日期" width="140">
+                  <el-table-column prop="id" label="ID" width="140">
                   </el-table-column>
-                  <el-table-column prop="name" label="姓名" width="120">
+                  <el-table-column prop="username" label="用户名" width="120">
                   </el-table-column>
-                  <el-table-column prop="render" label="性别" width="100">
+                  <el-table-column prop="gender" label="性别" width="100">
                   </el-table-column>
-                  <el-table-column prop="address" label="地址">
+                  <el-table-column prop="address" label="既往病史">
                   </el-table-column>
                   <el-table-column prop="change" label="操作">
                     <template slot-scope="scope">
                       <el-button @click="handleClick(scope.row)" type="text" size="small">移动</el-button>
-                      <el-button type="text" size="small">删除</el-button>
+                      <el-button type="text" size="small" @click="userDelete(scope.row)">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -103,7 +98,7 @@
                     :current-page.sync="currentPage1"
                     :page-size="20"
                     layout="total, prev, pager, next"
-                    :total="101">
+                    :total=tableData.length>
                   </el-pagination>
                 </div>
               </el-main>
@@ -117,14 +112,31 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   name: 'Member',
   data () {
+    let checkName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('用户名不能为空'))
+      }
+      setTimeout(() => {
+        if (!value) {
+          callback(new Error('请输入用户名'))
+        } else {
+          callback()
+        }
+      }, 1000)
+    }
     return {
       err: false,
       path: [],
+      group: [],
       newGroupForm: {
         name: ''
+      },
+      rules: {
+        name: [{ validator: checkName, trigger: 'blur' }]
       },
       contenter: [true, false],
       username: JSON.parse(localStorage.getItem('userMessage')).username,
@@ -149,22 +161,96 @@ export default {
   watch: {
   },
   methods: {
+    userDelete (obj) {
+      console.log({id: this.key, uid: obj.id})
+      if (obj.id === JSON.parse(localStorage.getItem('userMessage')).id){
+        this.$message('不可以删除自己哦')
+      } else {
+        this.$http.delete('http://39.105.193.111:5000/group/user',{data:{'id': this.key, 'uid': obj.id}})
+          .then(res => {
+            this.tableData = this.tableData.filter((item) => {return item.id !== obj.id})
+            console.log(res)
+          })
+      }
+
+    },
+    checkSameName (value, tableData) {
+      if (tableData) {
+        tableData.forEach( item => {
+          if (item.name === value) {
+            return false
+          } else {
+            return true
+          }
+        })
+      } else {
+        return true
+      }
+    },
+    addUser () {
+      this.$prompt('请输入用户名', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        console.log(this.tableData)
+        if (this.checkSameName(value, this.tableData)) {
+          this.$message('已添加过该用户')
+        } else { // 先搜索是否有该用户，然后再添加
+          this.$http.get('http://39.105.193.111:5000/user/search/',{params: {username: value}})
+            .then(res => {
+              if (res.status === 200) {
+               if ( res.data) {
+                this.$http.post('http://39.105.193.111:5000/group/user', {
+                  "id": this.key,
+                  "users": [
+                    {"id": res.data.id}
+                  ]
+                }).then(() => {
+                  this.tableData.push({username: value, id: res.data.id})
+                  console.log("用户添加成功", this.key)
+                })
+              } else {
+                 this.$message('该用户不存在')
+               }
+              console.log(res)
+              }
+            })
+        }
+      }).catch((err) => {
+        console.log(err)
+        // this.$message({
+        //   type: 'info',
+        //   message: '取消输入'
+        // });
+      });
+    },
+    deleteGroup (id) {
+      console.log({'id': id})
+      this.$http.delete('http://39.105.193.111:5000/group', {data:{'id': id}})
+        .then(res => {
+          console.log(res)
+        })
+    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          let flag = true
           this.$http.post('http://39.105.193.111:5000/group/', this.newGroupForm)
             .then((res) => {
               console.log('请求成功', res)
+              flag = false
               if (res.data.code === 200) {
                 console.log('注册成功')
                 console.log(res)
-                // this.$router.push('/login')
+                this.$router.push('/member')
               } else {
                 this.err = true
                 console.log('用户名已存在')
               }
             })
-          console.log('submit!')
+          if (flag) {
+            console.log('submit!')
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -193,7 +279,16 @@ export default {
         case '1': this.contenter = [true, false]; break
         case '2': this.contenter = [false, true]; break
       }
-      console.log(keyPath)
+      if (keyPath.length>1) {
+        let id = keyPath[1]
+        this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: id}})
+          .then(res => {
+            console.log(res)
+            this.tableData = res.data.data.userList
+            this.key = id
+          })
+      }
+      console.log(key)
     },
     logOut () {
       this.$http({
@@ -214,10 +309,11 @@ export default {
           .then((res) => {
             if (res.data.code === 200) {
               console.log(res)
+              this.group = res.data.data
             }
           })
       }
-      console.log(keyPath)
+      // console.log(keyPath)
     },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
@@ -251,6 +347,9 @@ export default {
     min-height: 400px;
   }
   #path{
-    margin:25px 0;
+    display: inline-block;
+    float: left;
+    line-height: 60px;
+    width: 400px;
   }
 </style>

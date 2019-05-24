@@ -25,9 +25,9 @@
       <div class="app">
         <el-row :gutter="35" type="flex" id="app" style="margin: 0">
           <el-col :span="5"><el-card shadow="hover">
-            <router-link to="/login">
+            <router-link to="/heartTest">
             <img src="../assets/心跳2.png" alt="">
-            <p>呼吸心跳检测</p>
+            <p>健康数据记录</p>
           </router-link>
           </el-card></el-col>
           <el-col :span="5"><el-card shadow="hover">

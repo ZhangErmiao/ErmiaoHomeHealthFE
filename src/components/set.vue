@@ -74,9 +74,103 @@
                   </el-col>
                 </el-row>
               </el-collapse-item>
+
               <el-collapse-item name="2-1">
                 <template slot="title" >
                   <i class="header-icon el-icon-s-order"></i>既往病史
+                </template>
+                <el-collapse  @change="handleChange" style="padding: 0 30px">
+                  <el-collapse-item name="2-1" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-2" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-3" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-4" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-collapse-item>
+              <el-collapse-item name="2-2">
+                <template slot="title" >
+                  <i class="header-icon el-icon-s-order"></i>家族病史
+                </template>
+                <el-collapse  @change="handleChange" style="padding: 0 30px">
+                  <el-collapse-item name="2-2" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-2" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-3" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-4" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-collapse-item>
+              <el-collapse-item name="2-3">
+                <template slot="title" >
+                  <i class="header-icon el-icon-s-order"></i>手术史
+                </template>
+                <el-collapse  @change="handleChange" style="padding: 0 30px">
+                  <el-collapse-item name="2-1" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-2" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-3" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                  <el-collapse-item name="2-4" title="20170901 糖尿病" >
+                    <template slot="title">
+                      <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
+                    </template>
+                    <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-collapse-item>
+              <el-collapse-item name="2-4">
+                <template slot="title" >
+                  <i class="header-icon el-icon-s-order"></i>过敏史
                 </template>
                 <el-collapse  @change="handleChange" style="padding: 0 30px">
                   <el-collapse-item name="2-1" >
@@ -299,7 +393,7 @@ export default {
     submitForm (formName) { // 这部分还没写
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.put('http://39.105.193.111:5000/user/password', {'password':this.ruleForm.password,'newPassword':this.ruleForm.newPassword})
+          this.$http.put('http://39.105.193.111:5000/user/password', {'password': this.ruleForm.password, 'newPassword': this.ruleForm.newPassword})
             .then((res) => {
               console.log(res)
             })
