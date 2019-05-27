@@ -3,7 +3,7 @@
   <el-header style="padding:0">
     <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelectHeader" background-color="#545c64"
              text-color="#fff"
-             active-text-color="#ffd04b" style="padding: 0 20px">
+             active-text-color="#ffd04b" style="padding: 0">
       <el-menu-item index="1">首页</el-menu-item>
       <el-menu-item index="7">购买</el-menu-item>
       <el-menu-item index="8">社区</el-menu-item>
@@ -13,80 +13,97 @@
       <el-menu-item index="5" style="float: right;" v-if="Token">你好，{{username}}</el-menu-item>
     </el-menu>
   </el-header>
-    <el-main style="padding: 0;background-color: gainsboro">
-      <el-tabs :tab-position="tabPosition"  v-model="activeName" type="border-card" @tab-click="handleClick" style="height: 100%">
-      <el-tab-pane label="健康档案" name="first">
-        <el-breadcrumb id="path">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>呼吸心跳记录</el-breadcrumb-item>
-          <el-breadcrumb-item>健康档案</el-breadcrumb-item>
-        </el-breadcrumb>
+    <el-main style="border: solid 0.1px gainsboro;">
         <el-row :gutter="25">
-          <el-col :span="18">
-            <el-tabs  type="border-card" @tab-click="handleClick" style="margin: 15px auto;">
-              <el-tab-pane label="呼吸" name="first">
-                <heart-test-breath></heart-test-breath>
-              </el-tab-pane>
-              <el-tab-pane label="心跳" name="second">
-                <heart-test-heart></heart-test-heart>
-              </el-tab-pane>
-              <el-tab-pane label="体重" name="third">
-                <heartTestWeight></heartTestWeight>
-              </el-tab-pane>
-              <el-tab-pane label="腰围" name="fourth">定时任务补偿</el-tab-pane>
-              <el-tab-pane label="血压" name="1">用户管理</el-tab-pane>
-              <el-tab-pane label="血糖" name="2">配置管理</el-tab-pane>
-            </el-tabs>
-          </el-col>
-          <el-col :span="6">
-            <el-tabs  type="border-card" @tab-click="handleClick" style="margin: 15px auto;">
-              <el-tab-pane label="呼吸" name="first">
-              </el-tab-pane>
-              <el-tab-pane label="心跳" name="second">配置管理</el-tab-pane>
-              <el-tab-pane label="体重" name="third">
-              </el-tab-pane>
-              <el-tab-pane label="腰围" name="fourth">定时任务补偿</el-tab-pane>
-              <el-tab-pane label="血压" name="1">用户管理</el-tab-pane>
-              <el-tab-pane label="血糖" name="2">配置管理</el-tab-pane>
-            </el-tabs>
+          <el-col :span="24">
+            <el-row >
+              <el-col :span="16">
+                <el-breadcrumb  id='path' >
+                  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                  <el-breadcrumb-item>健康数据记录</el-breadcrumb-item>
+                </el-breadcrumb>
+              </el-col>
+              <el-col :span="8" >
+                <el-button type="text" @click="addDataType" style="padding-top:0">
+                  <i class="el-icon-edit"></i>添加数据类型
+                </el-button>
+                <el-button type="text" @click="addData" style="padding-top:0">
+                  <i class="el-icon-edit"></i>添加数据值
+                </el-button>
+<!--                <el-button type="text" @click="askData" style="padding-top:0">-->
+<!--                  <i class="el-icon-edit"></i>获取数据-->
+<!--                </el-button>-->
+                <el-dialog title="添加数据值" :visible.sync="dialogFormVisible">
+                  <el-form :model="addDataForm">
+                    <el-form-item label="数据类型" :label-width="formLabelWidth">
+                      <el-select v-model="addDataForm.tid" placeholder="请选择数据类型">
+                        <el-option v-for="item in typeTabs" :label="item.typeName" :value="item.id" :key="item.id"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="数据值" :label-width="formLabelWidth">
+                      <el-input v-model="addDataForm.value" autocomplete="off"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="newDataSubmit">确 定</el-button>
+                  </div>
+                </el-dialog>
+              </el-col>
+            </el-row>
+              <heart-test-breath :tid="prop"></heart-test-breath>
+
           </el-col>
         </el-row>
-
-
-      </el-tab-pane>
-      <el-tab-pane label="健康记录" name="second">健康记录</el-tab-pane>
-      <el-tab-pane label="健康评估" name="third">健康评估</el-tab-pane>
-      <el-tab-pane label="我的设备" name="fourth">我的设备</el-tab-pane>
-    </el-tabs>
 
     </el-main>
   </el-container>
 </template>
 
 <script>
-  import heartTestWeight from './heartTest_weight.vue'
   import heartTestBreath from './heartTest_breath.vue'
-  import heartTestHeart from './heartTest_heart.vue'
-export default {
+
+  export default {
   name: 'HeartTest',
   components: {
-    'heartTestWeight': heartTestWeight,
-    'heartTestBreath': heartTestBreath,
-    'heartTestHeart': heartTestHeart,
+    'heartTestBreath': heartTestBreath
   },
   data () {
     return {
+      dialogFormVisible: false,
+      addDataForm: {
+        value: '',
+        tid: ''
+      },
+      formLabelWidth: '120px',
+      typeTabs: [],
       value1: '',
       username: JSON.parse(localStorage.getItem('userMessage')).username,
+      id: JSON.parse(localStorage.getItem('userMessage')).id,
       Token: localStorage.getItem('Authorization'),
       activeIndex: '1',
       activeName: 'first',
-      tabPosition: 'left',
-
+      activeName2: '0',
+      tabPosition: 'left'
     }
   },
-
+  mounted: function () {
+    this.$http.get('http://39.105.193.111:5000/type/all', {params: {gid: '10038'}})
+      .then(res => {
+        console.log('数据类型：', res)
+        this.typeTabs = res.data.data
+        this.prop = this.typeTabs[0].id
+      })
+  },
   methods: {
+    newDataSubmit () {
+      this.dialogFormVisible = false
+      this.$http.post('http://39.105.193.111:5000/sensor/', this.addDataForm)
+        .then(res => {
+          console.log(res)
+        })
+      console.log(this.addDataForm)
+    },
     handleSelectHeader (key, keyPath) {
       switch (key) {
         case '1': this.$router.push('/'); break
@@ -97,10 +114,26 @@ export default {
       }
       console.log(keyPath)
     },
-    handleClick (tab, event) {
-      console.log(tab, event)
+    addDataType () {
+      this.$prompt('请输入数据类型', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({value}) => {
+        this.$http.post('http://39.105.193.111:5000/type/', {gid: '10038', typeName: value})
+          .then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          })
+      })
+    },
+    addData () {
+      this.dialogFormVisible = true
+      this.$http.get('http://39.105.193.111:5000/type/all', {params: {gid: '10038'}})
+        .then(res => {
+          this.typeTabs = res.data.data
+        })
     }
-
   }
 }
 </script>

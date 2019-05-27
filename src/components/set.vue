@@ -37,6 +37,10 @@
                 <el-menu-item index="2-2">权限设置</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
+            <el-menu-item index="3">
+              <i class="el-icon-aim"></i>
+              <span slot="title">我的设备</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
   <!---------------------------------------------- 个人信息部分 -------------------------------------------------------->

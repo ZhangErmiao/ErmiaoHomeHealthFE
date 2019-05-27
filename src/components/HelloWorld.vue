@@ -30,18 +30,18 @@
             <p>健康数据记录</p>
           </router-link>
           </el-card></el-col>
-          <el-col :span="5"><el-card shadow="hover">
-            <router-link to="/login">
-              <img src="../assets/人员关系.png" alt="">
-              <p>人员信息统计</p>
-            </router-link>
-          </el-card></el-col>
-          <el-col :span="5"><el-card shadow="hover">
-            <router-link to="/login">
-              <img src="../assets/数据2.png" alt="">
-              <p>家庭数据统计</p>
-            </router-link>
-          </el-card></el-col>
+<!--          <el-col :span="5"><el-card shadow="hover">-->
+<!--            <router-link to="/login">-->
+<!--              <img src="../assets/人员关系.png" alt="">-->
+<!--              <p>人员信息统计</p>-->
+<!--            </router-link>-->
+<!--          </el-card></el-col>-->
+<!--          <el-col :span="5"><el-card shadow="hover">-->
+<!--            <router-link to="/login">-->
+<!--              <img src="../assets/数据2.png" alt="">-->
+<!--              <p>家庭数据统计</p>-->
+<!--            </router-link>-->
+<!--          </el-card></el-col>-->
           <el-col :span="5"><el-card shadow="hover">
             <router-link to="/member">
               <img src="../assets/人员信息7.png" alt="">

@@ -7,8 +7,6 @@ import Set from '@/components/Set'
 import Member from '@/components/Member'
 import Registered from '@/components/Registered'
 import HeartTest from '@/components/HeartTest'
-
-
 // import {ls} from '../store/pageStore.js'
 Vue.use(Router)
 
