@@ -27,7 +27,11 @@
                 <i class="el-icon-edit-outline"></i>
                 <span slot="title">创建群组</span>
               </el-menu-item>
-              <el-submenu index="2">
+              <el-menu-item index="2">
+                <i class="el-icon-search"></i>
+                <span slot="title">搜索群组</span>
+              </el-menu-item>
+              <el-submenu index="3">
                 <template slot="title">
                   <i class="el-icon-school"></i>
                   <span>我的群组</span>
@@ -54,18 +58,40 @@
                 <el-form :model="newGroupForm" :rules="rules" status-icon ref="newGroupForm" label-width="100px">
                   <el-form-item   label="群组名称" prop="name">
                     <el-input  placeholder="请输入群组名称" v-model.number="newGroupForm.name"></el-input>
-                    <p id="err" v-show="err">用户名已存在</p>
                   </el-form-item>
                   <el-form-item>
                     <el-button type="primary" @click="submitForm('newGroupForm')">创建</el-button>
-                    <el-button @click="resetForm('newGroupForm')">重置</el-button>
+                    <el-button @click="resetFormName('newGroupForm')">重置</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-main>
+            </el-container>
+          </template>
+<!-- ----------------------------------搜索群组 --------------------------------------------------->
+          <template id="searchMyGroup" v-if="contenter[1]">
+            <el-container>
+              <el-header >
+                <el-breadcrumb  id='path'>
+                  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                  <el-breadcrumb-item>家庭成员管理</el-breadcrumb-item>
+                  <el-breadcrumb-item>创建群组</el-breadcrumb-item>
+                </el-breadcrumb>
+              </el-header>
+              <el-main>
+                <el-form :model="searchGroupForm" :rules="rules" status-icon ref="searchGroupForm" label-width="100px">
+                  <el-form-item   label="群组ID" prop="id">
+                    <el-input  placeholder="请输入群组id" v-model.number="searchGroupForm.id"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="searchForm('searchGroupForm')">搜索</el-button>
+                    <el-button @click="resetFormId('searchGroupForm')">重置</el-button>
                   </el-form-item>
                 </el-form>
               </el-main>
             </el-container>
           </template>
 <!-----------------------------------------  我的群组 ------------------------------------------------->
-          <template id="showMyGroup" v-if="contenter[1]">
+          <template id="showMyGroup" v-if="contenter[2]">
             <el-container>
               <el-header >
                 <el-breadcrumb id="path">
@@ -129,16 +155,18 @@ export default {
       }, 1000)
     }
     return {
-      err: false,
       path: [],
       group: [],
       newGroupForm: {
         name: ''
       },
+      searchGroupForm: {
+        id: ''
+      },
       rules: {
         name: [{ validator: checkName, trigger: 'blur' }]
       },
-      contenter: [true, false],
+      contenter: [true, false, false],
       username: JSON.parse(localStorage.getItem('userMessage')).username,
       tableData: [{date: '2016-05-02',
         name: '丁小海',
@@ -231,6 +259,14 @@ export default {
           console.log(res)
         })
     },
+    searchForm (formId) {
+      this.$http.get('http://39.105.193.111:5000/group/', {params: {id: formId}})
+        .then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+      }).finally(() => {this.resetFormId(formId)})
+    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -242,10 +278,16 @@ export default {
               if (res.data.code === 200) {
                 console.log('注册成功')
                 console.log(res)
-                this.$router.push('/member')
+                this.$message({
+                  message: '群组创建成功！',
+                  type: 'success'
+                })
+                this.resetFormName(formName)
+                // this.$router.push('/member')
               } else {
                 this.err = true
-                console.log('用户名已存在')
+                this.$message.error('群组名称已存在') // 后台允许相同名称的群
+                // console.log('群名称已存在！')
               }
             })
           if (flag) {
@@ -257,10 +299,9 @@ export default {
         }
       })
     },
-    resetForm (formName) {
-      this.err = false
-      this.$refs[formName].resetFields()
-    },
+    // resetForm (formName) {
+    //   this.$refs[formName].resetFields()
+    // },
     handleClick (row) {
       console.log(row)
     },
@@ -276,10 +317,11 @@ export default {
     },
     handleSelect (key, keyPath) {
       switch (keyPath[0]) {
-        case '1': this.contenter = [true, false]; break
-        case '2': this.contenter = [false, true]; break
+        case '1': this.contenter = [true, false, false]; break
+        case '2': this.contenter = [false, true, false]; break
+        case '3': this.contenter = [false, false, true]; break
       }
-      if (keyPath.length>1) {
+      if (keyPath && keyPath.length>1) {
         let id = keyPath[1]
         this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: id}})
           .then(res => {
@@ -304,7 +346,7 @@ export default {
         })
     },
     handleOpen (key, keyPath) { // 暂时没用
-      if (key === '2') {
+      if (key === '3') {
         this.$http.get('http://39.105.193.111:5000/group/all')
           .then((res) => {
             if (res.data.code === 200) {
@@ -320,6 +362,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
+    },
+    resetFormName (formName) {
+      this.$refs[formName].resetFields()
+    },
+    resetFormId (formId) {
+      this.$refs[formId].resetFields()
     }
   }
 }

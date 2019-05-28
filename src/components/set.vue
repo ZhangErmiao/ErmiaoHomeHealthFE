@@ -34,7 +34,7 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="2-1">修改密码</el-menu-item>
-                <el-menu-item index="2-2">权限设置</el-menu-item>
+<!--                <el-menu-item index="2-2">权限设置</el-menu-item>-->
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="3">
@@ -63,17 +63,31 @@
                     <img style="width: 150px; height: 180px" :src= "userMessage.iconUrl" />
                   </el-col>
                   <el-col :span="5" style="text-align: left">
-                    <p>用户名：{{userMessage.username}}</p>
-                    <p>
-                      身高：{{userMessage.height}}cm <el-button type="text" @click="changeHeight"><i class="el-icon-edit-outline"></i></el-button>
+                    <p>用户名：{{userMessage.username}}
+                      <el-button type="text" @click="changeName">
+                        <i class="el-icon-edit-outline"></i>
+                      </el-button>
                     </p>
-                    <p>BMI：{{bmi}}</p>
+<!--                    <p>-->
+<!--                      身高：{{userMessage.height}}cm-->
+<!--                      <el-button type="text" @click="changeHeight">-->
+<!--                        <i class="el-icon-edit-outline"></i>-->
+<!--                      </el-button>-->
+<!--                    </p>-->
+<!--                    <p>BMI：{{bmi}}</p>-->
                   </el-col>
                   <el-col :span="10" style="text-align: left">
-                    <p>性别：{{userMessage.render}}</p>
-                    <p>
-                      体重：{{userMessage.weight}}kg <el-button type="text" @click="changeWeight"><i class="el-icon-edit-outline"></i></el-button>
+                    <p>性别：{{userMessage.render}}
+                      <el-button type="text" @click="changeRender">
+                        <i class="el-icon-edit-outline"></i>
+                      </el-button>
                     </p>
+<!--                    <p>-->
+<!--                      体重：{{userMessage.weight}}kg-->
+<!--                      <el-button type="text" @click="changeWeight">-->
+<!--                        <i class="el-icon-edit-outline"></i>-->
+<!--                      </el-button>-->
+<!--                    </p>-->
 
                   </el-col>
                 </el-row>
@@ -234,87 +248,87 @@
             </el-main>
           </template>
 <!------------------------------------------------- 安全中心-权限设置 -------------------------------------------------->
-          <template id="safeCenter-permissionSet" v-if='contentFlag[2]'>
-            <el-header >
-              <el-breadcrumb  id='path'>
-                <el-breadcrumb-item :to="{ path: '/' }">设置</el-breadcrumb-item>
-                <el-breadcrumb-item>安全中心</el-breadcrumb-item>
-                <el-breadcrumb-item>权限设置</el-breadcrumb-item>
-              </el-breadcrumb>
-            </el-header>
-            <el-main style="padding-top: 0">
-              <el-collapse v-model="activeNames" @change="handleChange">
-                <el-collapse-item name="1">
-                  <template slot="title" >
-                    <i class="header-icon el-icon-s-order"></i>个人权限
-                  </template>
-                  <div style="display: flex; text-align: justify-all">
-                    <span>skdjhfalsjfh</span>
-                    <el-switch
-                      v-model="value2"
-                      active-color="#13ce66"
-                      inactive-color="#ff4949">
-                    </el-switch>
-                  </div>
-                  <div>
-                    <span>skdjhfalsjfh</span>
-                    <el-switch
-                      v-model="value2"
-                      active-color="#13ce66"
-                      inactive-color="#ff4949">
-                    </el-switch>
-                  </div>
-                  <div>
-                    <span>skdjhfalsjfh</span>
-                    <el-switch
-                      v-model="value2"
-                      active-color="#13ce66"
-                      inactive-color="#ff4949">
-                    </el-switch>
-                  </div>
-                  <div>
-                    <span>skdjhfalsjfh</span>
-                    <el-switch
-                      v-model="value2"
-                      active-color="#13ce66"
-                      inactive-color="#ff4949">
-                    </el-switch>
-                  </div>
-                </el-collapse-item>
-                <el-collapse-item name="2">
-                  <template slot="title" >
-                    <i class="header-icon el-icon-s-order"></i>群组权限
-                  </template>
-                  <el-collapse  @change="handleChange" style="padding: 0 30px">
-                    <el-collapse-item name="2-1" >
-                      <template slot="title">
-                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
-                      </template>
-                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
-                    </el-collapse-item>
-                    <el-collapse-item name="2-2" title="20170901 糖尿病" >
-                      <template slot="title">
-                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
-                      </template>
-                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
-                    </el-collapse-item>
-                    <el-collapse-item name="2-3" title="20170901 糖尿病" >
-                      <template slot="title">
-                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
-                      </template>
-                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
-                    </el-collapse-item>
-                    <el-collapse-item name="2-4" title="20170901 糖尿病" >
-                      <template slot="title">
-                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病
-                      </template>
-                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>
-                    </el-collapse-item>
-                  </el-collapse>
-                </el-collapse-item>
-              </el-collapse>
-            </el-main>
-          </template>
+<!--          <template id="safeCenter-permissionSet" v-if='contentFlag[2]'>-->
+<!--            <el-header >-->
+<!--              <el-breadcrumb  id='path'>-->
+<!--                <el-breadcrumb-item :to="{ path: '/' }">设置</el-breadcrumb-item>-->
+<!--                <el-breadcrumb-item>安全中心</el-breadcrumb-item>-->
+<!--                <el-breadcrumb-item>权限设置</el-breadcrumb-item>-->
+<!--              </el-breadcrumb>-->
+<!--            </el-header>-->
+<!--            <el-main style="padding-top: 0">-->
+<!--              <el-collapse v-model="activeNames" @change="handleChange">-->
+<!--                <el-collapse-item name="1">-->
+<!--                  <template slot="title" >-->
+<!--                    <i class="header-icon el-icon-s-order"></i>个人权限-->
+<!--                  </template>-->
+<!--                  <div style="display: flex; text-align: justify-all">-->
+<!--                    <span>skdjhfalsjfh</span>-->
+<!--                    <el-switch-->
+<!--                      v-model="value2"-->
+<!--                      active-color="#13ce66"-->
+<!--                      inactive-color="#ff4949">-->
+<!--                    </el-switch>-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    <span>skdjhfalsjfh</span>-->
+<!--                    <el-switch-->
+<!--                      v-model="value2"-->
+<!--                      active-color="#13ce66"-->
+<!--                      inactive-color="#ff4949">-->
+<!--                    </el-switch>-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    <span>skdjhfalsjfh</span>-->
+<!--                    <el-switch-->
+<!--                      v-model="value2"-->
+<!--                      active-color="#13ce66"-->
+<!--                      inactive-color="#ff4949">-->
+<!--                    </el-switch>-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    <span>skdjhfalsjfh</span>-->
+<!--                    <el-switch-->
+<!--                      v-model="value2"-->
+<!--                      active-color="#13ce66"-->
+<!--                      inactive-color="#ff4949">-->
+<!--                    </el-switch>-->
+<!--                  </div>-->
+<!--                </el-collapse-item>-->
+<!--                <el-collapse-item name="2">-->
+<!--                  <template slot="title" >-->
+<!--                    <i class="header-icon el-icon-s-order"></i>群组权限-->
+<!--                  </template>-->
+<!--                  <el-collapse  @change="handleChange" style="padding: 0 30px">-->
+<!--                    <el-collapse-item name="2-1" >-->
+<!--                      <template slot="title">-->
+<!--                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病-->
+<!--                      </template>-->
+<!--                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>-->
+<!--                    </el-collapse-item>-->
+<!--                    <el-collapse-item name="2-2" title="20170901 糖尿病" >-->
+<!--                      <template slot="title">-->
+<!--                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病-->
+<!--                      </template>-->
+<!--                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>-->
+<!--                    </el-collapse-item>-->
+<!--                    <el-collapse-item name="2-3" title="20170901 糖尿病" >-->
+<!--                      <template slot="title">-->
+<!--                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病-->
+<!--                      </template>-->
+<!--                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>-->
+<!--                    </el-collapse-item>-->
+<!--                    <el-collapse-item name="2-4" title="20170901 糖尿病" >-->
+<!--                      <template slot="title">-->
+<!--                        <i class="el-icon-d-arrow-right"></i>20170901 糖尿病-->
+<!--                      </template>-->
+<!--                      <p>sfasdkfhaldsjfhalskjdhflaksjdhfalsdjhfhalkdjshflsk</p>-->
+<!--                    </el-collapse-item>-->
+<!--                  </el-collapse>-->
+<!--                </el-collapse-item>-->
+<!--              </el-collapse>-->
+<!--            </el-main>-->
+<!--          </template>-->
         </el-container>
       </el-container>
 
@@ -336,9 +350,14 @@ export default {
     let validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入新密码'))
+      } else if (this.ruleForm.password !== '') {
+        if (value === this.ruleForm.password) {
+          callback(new Error('新旧密码相同'))
+        }
+        callback()
       } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass')
+        if (this.ruleForm.checkNewPass !== '') {
+          this.$refs.ruleForm.validateField('checkNewPass')
         }
         callback()
       }
@@ -346,7 +365,7 @@ export default {
     let validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入新密码'))
-      } else if (value !== this.ruleForm.checkNewPass) {
+      } else if (value !== this.ruleForm.newPassword) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
@@ -388,7 +407,7 @@ export default {
     }
   },
   computed: {
-    bmi: () => {
+    bmi () {
       let bmi = this.weight / (this.height / 100)
       return Math.pow(bmi, 2)
     }
@@ -400,6 +419,16 @@ export default {
           this.$http.put('http://39.105.193.111:5000/user/password', {'password': this.ruleForm.password, 'newPassword': this.ruleForm.newPassword})
             .then((res) => {
               console.log(res)
+              if (res.data.code === 200) {
+                this.$message({
+                  message: '密码修改成功！',
+                  type: 'success'
+                })
+                this.$refs[formName].resetFields()
+              } else if (res.data.code === 400) {
+                this.$message.error('密码修改失败！')
+                this.$refs[formName].resetFields()
+              }
             })
         } else {
           console.log('error submit!!')
@@ -418,6 +447,47 @@ export default {
         inputErrorMessage: '邮箱格式不正确'
       }).then(({ value }) => {
         this.userMessage.height = value
+        this.$http.put('http://39.105.193.111:5000/user/update', {height: value})
+          .then(res => {
+            console.log(res)
+          })
+        console.log('身高修改成功', '身高：', value)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    changeName () {
+      this.$prompt('请输入新的用户名', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        this.userMessage.username = value
+        this.$http.put('http://39.105.193.111:5000/user/update', {username: value})
+          .then(res => {
+            console.log(res)
+          })
+        console.log('用户名修改成功', '用户名：', value)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    changeRender () {
+      this.$prompt('请输入身高', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputErrorMessage: '邮箱格式不正确'
+      }).then(({ value }) => {
+        this.userMessage.height = value
+        this.$http.put('http://39.105.193.111:5000/user/update', {height: value})
+          .then(res => {
+            console.log(res)
+          })
         console.log('身高修改成功', '身高：', value)
       }).catch(() => {
         this.$message({

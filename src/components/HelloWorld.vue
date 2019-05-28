@@ -24,7 +24,7 @@
       </div>
       <div class="app">
         <el-row :gutter="35" type="flex" id="app" style="margin: 0">
-          <el-col :span="5"><el-card shadow="hover">
+          <el-col :span="12"><el-card shadow="hover">
             <router-link to="/heartTest">
             <img src="../assets/心跳2.png" alt="">
             <p>健康数据记录</p>
@@ -42,7 +42,7 @@
 <!--              <p>家庭数据统计</p>-->
 <!--            </router-link>-->
 <!--          </el-card></el-col>-->
-          <el-col :span="5"><el-card shadow="hover">
+          <el-col :span="12"><el-card shadow="hover">
             <router-link to="/member">
               <img src="../assets/人员信息7.png" alt="">
               <p>家庭成员管理</p>
@@ -126,7 +126,10 @@ export default {
 }
 #app{
   justify-content: space-around;
-
+}
+.app img{
+  width: 128px;
+  height: 128px;
 }
   .block img{
     width: 100%;
