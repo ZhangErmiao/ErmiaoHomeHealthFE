@@ -59,6 +59,18 @@
                   <el-form-item   label="群组名称" prop="name">
                     <el-input  placeholder="请输入群组名称" v-model.number="newGroupForm.name"></el-input>
                   </el-form-item>
+                  <el-form-item   label="数据类型" prop="type" style="text-align: left">
+                    <template v-for="(item, index) in newGroupForm.type">
+                      <el-input maxlength="10"
+                                 show-word-limit
+                                :key="index"
+                                 placeholder="请输入类型名称" v-model.number="newGroupForm.type[index]" style="max-width: 160px"></el-input>
+                      <i :key="index" class="el-icon-close" @click="deleteGroupType(index)"></i>
+                    </template>
+                    <el-button type="text" @click="addDataType" style="padding-top:0">
+                      <i class="el-icon-edit"></i>添加数据类型
+                    </el-button>
+                  </el-form-item>
                   <el-form-item>
                     <el-button type="primary" @click="submitForm('newGroupForm')">创建</el-button>
                     <el-button @click="resetFormName('newGroupForm')">重置</el-button>
@@ -108,8 +120,8 @@
                   </el-table-column>
                   <el-table-column prop="gender" label="性别" width="100">
                   </el-table-column>
-                  <el-table-column prop="address" label="既往病史">
-                  </el-table-column>
+<!--                  <el-table-column prop="address" label="既往病史">-->
+<!--                  </el-table-column>-->
                   <el-table-column prop="change" label="操作">
                     <template slot-scope="scope">
                       <el-button @click="handleClick(scope.row)" type="text" size="small">移动</el-button>
@@ -158,7 +170,8 @@ export default {
       path: [],
       group: [],
       newGroupForm: {
-        name: ''
+        name: '',
+        type:[]
       },
       searchGroupForm: {
         id: ''
@@ -189,6 +202,14 @@ export default {
   watch: {
   },
   methods: {
+    deleteGroupType (index) {
+      console.log(index)
+      this.newGroupForm.type.splice(index, 1)
+    },
+    addDataType(){
+      this.newGroupForm.type.push('')
+      console.log('newGroupType:', this.newGroupForm.type)
+    },
     userDelete (obj) {
       console.log({id: this.key, uid: obj.id})
       if (obj.id === JSON.parse(localStorage.getItem('userMessage')).id){
@@ -271,6 +292,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let flag = true
+          // console.log('newGroup: ', this.newGroupForm)
           this.$http.post('http://39.105.193.111:5000/group/', this.newGroupForm)
             .then((res) => {
               console.log('请求成功', res)
@@ -284,6 +306,7 @@ export default {
                 })
                 this.resetFormName(formName)
                 // this.$router.push('/member')
+                //这个地方要添加发送grouptype的请求
               } else {
                 this.err = true
                 this.$message.error('群组名称已存在') // 后台允许相同名称的群
@@ -299,9 +322,6 @@ export default {
         }
       })
     },
-    // resetForm (formName) {
-    //   this.$refs[formName].resetFields()
-    // },
     handleClick (row) {
       console.log(row)
     },
@@ -321,14 +341,16 @@ export default {
         case '2': this.contenter = [false, true, false]; break
         case '3': this.contenter = [false, false, true]; break
       }
-      if (keyPath && keyPath.length>1) {
-        let id = keyPath[1]
-        this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: id}})
-          .then(res => {
-            console.log(res)
-            this.tableData = res.data.data.userList
-            this.key = id
-          })
+      if (keyPath !== undefined) {
+        if (keyPath.length>1){
+          let id = keyPath[1]
+          this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: id}})
+            .then(res => {
+              console.log(res)
+              this.tableData = res.data.data.userList
+              this.key = id
+            })
+        }
       }
       console.log(key)
     },

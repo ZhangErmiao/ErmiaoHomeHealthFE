@@ -19,11 +19,15 @@ const store = new Vuex.Store({
       state.path.push(child)
       localStorage.setItem('path', state.path)
     },
-    isLogIn (state, obj) {
+    isLogIn (state, obj, days) {
       state.user = obj.user
       state.token = 'Bearer ' + obj.token
+      let Days = days || 1
+      let exp = new Date()
+      let expires = exp.getTime() + Days * 24 * 60 * 60 * 1000
       localStorage.setItem('Authorization', state.token)
       localStorage.setItem('userMessage', JSON.stringify(state.user))
+      localStorage.setItem('userTime', JSON.stringify(expires))
       // ls.setItem(obj, 7)
     },
     isLogOut (state) {

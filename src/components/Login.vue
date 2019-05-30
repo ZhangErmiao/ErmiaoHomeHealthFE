@@ -2,11 +2,9 @@
   <el-container class="container">
     <el-header class="el-head">
       <router-link to="/login" >
-          <el-button  class="head defaultActive">登录</el-button>
+          <el-button  class="head defaultActive">登 录</el-button>
       </router-link>
-      <router-link to="/registered" >
-        <el-button class="head">注册</el-button>
-      </router-link>
+
     </el-header>
     <el-main>
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="60px" class="demo-ruleForm">
@@ -16,6 +14,9 @@
         <el-form-item  label="密码" prop="password">
           <el-input  placeholder="请输入密码" type="password" v-model="ruleForm.password" ></el-input>
         </el-form-item>
+        <router-link to="/registered" >
+          <span style="text-align: left">注册</span>
+        </router-link>
           <p id="err" v-show="err">用户名或密码错误</p>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -75,7 +76,7 @@ export default {
             .then((res) => {
               console.log('请求发送成功', res)
               if (res.data.code === 200) {
-                this.$store.dispatch('isLogIn', res.data.data)
+                this.$store.dispatch('isLogIn', res.data.data, 1)
                   .then(() => {
                     // console.log(localStorage.getItem('user'))
                     this.$router.push('/') // 这个地方的this有坑，要么用function+bind或箭头函数

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
 import About from '@/components/About'
+import Help from '@/components/Help'
 import Set from '@/components/Set'
 import Member from '@/components/Member'
 import Registered from '@/components/Registered'
@@ -46,6 +47,11 @@ const router = new Router({
       path: '/heartTest',
       name: 'HeartTest',
       component: HeartTest
+    },
+    {
+      path: '/help',
+      name: 'Help',
+      component: Help
     }
   ]
 })
@@ -54,7 +60,12 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     let user = localStorage.getItem('Authorization')
-    if (user) {
+    let time = localStorage.getItem('userTime')
+    let nowDate = new Date()
+    let nowTime = nowDate.getTime()
+    // console.log(time)
+    // console.log(nowTime)
+    if (user && nowTime < time) {
       next()
     } else {
       next('/login')

@@ -23,6 +23,12 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item   label="" prop="username">
+          <el-input  placeholder="请输入用户名" v-model.number="ruleForm.username"></el-input>
+        </el-form-item>
+        <el-form-item   label="用户名" prop="username">
+          <el-input  placeholder="请输入用户名" v-model.number="ruleForm.username"></el-input>
+        </el-form-item>
         <el-form-item  label="密码" prop="password">
           <el-input  placeholder="请输入密码" type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
         </el-form-item>

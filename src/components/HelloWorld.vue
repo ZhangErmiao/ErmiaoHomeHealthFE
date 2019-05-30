@@ -1,9 +1,10 @@
 <template >
   <el-container >
     <el-header style="padding:0">
-      <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelect" background-color="#545c64"
-               text-color="#fff"
-               active-text-color="#ffd04b" style="padding: 0 20px">
+      <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelect" >
+        <el-menu-item index="9">
+          <img src="../assets/tt.png" style="width:150px; height: 53px ">
+        </el-menu-item>
         <el-menu-item index="1">首页</el-menu-item>
         <el-menu-item index="7">购买</el-menu-item>
         <el-menu-item index="8">社区</el-menu-item>
@@ -16,14 +17,14 @@
     </el-header>
     <el-main style="padding:0;">
       <div class="block">
-        <el-carousel height="350px"  indicator-position="outside">
+        <el-carousel height="500px"  indicator-position="outside">
           <el-carousel-item v-for="item in imagesbox" :key="item.id">
             <img alt="" :src= item.idView>
           </el-carousel-item>
         </el-carousel>
       </div>
       <div class="app">
-        <el-row :gutter="35" type="flex" id="app" style="margin: 0">
+        <el-row :gutter="30" type="flex" id="app" style="margin: 0">
           <el-col :span="12"><el-card shadow="hover">
             <router-link to="/heartTest">
             <img src="../assets/心跳2.png" alt="">
@@ -75,9 +76,10 @@ export default {
     return {
       Token: localStorage.getItem('Authorization'),
       activeIndex: '1',
-      imagesbox: [{id: 0, idView: require('../assets/logo.png')},
+      imagesbox: [{id: 0, idView: require('../assets/c1.png')},
         {id: 1, idView: require('../assets/t.png')},
-        {id: 2, idView: require('../assets/b3.jpg')}]
+        {id: 2, idView: require('../assets/cc.jpg')},
+        {id: 3, idView: require('../assets/c2.png')}]
     }
   },
   computed: {
@@ -108,7 +110,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .el-carousel__item img {
-    opacity: 0.7;
+    opacity: 0.9;
     margin: 0;
   }
 
@@ -121,8 +123,8 @@ export default {
   /*}*/
 .app{
   padding: 20px;
-  border-top: solid 5px gainsboro;
-  border-bottom: solid 5px gainsboro;
+  border-top: solid 1px gainsboro;
+  border-bottom: solid 1px gainsboro;
 }
 #app{
   justify-content: space-around;

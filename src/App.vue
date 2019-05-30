@@ -90,6 +90,8 @@ export default {
 .footer{
   padding: 40px 150px;
   background-color:#34495e;
+  /*background-color:gainsboro;*/
+  /*background-color: #545c64;*/
   display: flex;
   justify-content: space-between;
 }
