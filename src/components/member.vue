@@ -113,10 +113,10 @@
                 <i class="el-icon-plus" @click="addUser"></i>
               </el-header>
               <el-main style="padding-top: 0">
-                <el-table :data="tableData" height="550px">
+                <el-table :data="tableData" height="550px" @cell-click="toUserHome">
                   <el-table-column prop="id" label="ID" width="140">
                   </el-table-column>
-                  <el-table-column prop="username" label="用户名" width="120">
+                  <el-table-column prop="username" label="用户名" width="120" >
                   </el-table-column>
                   <el-table-column prop="gender" label="性别" width="100">
                   </el-table-column>
@@ -145,14 +145,19 @@
         </el-container>
       </el-main>
     </el-container>
-
+    <user-home :user-click="userClick"></user-home>
   </div>
 </template>
 
 <script>
-/* eslint-disable */
-export default {
+  /* eslint-disable */
+  import userHome from './userHome.vue'
+
+  export default {
   name: 'Member',
+  components:{
+    userHome
+  },
   data () {
     let checkName = (rule, value, callback) => {
       if (!value) {
@@ -167,6 +172,7 @@ export default {
       }, 1000)
     }
     return {
+      userClick: {},
       path: [],
       group: [],
       newGroupForm: {
@@ -202,6 +208,14 @@ export default {
   watch: {
   },
   methods: {
+    toUserHome (value) {
+      console.log(value)
+      this.userClick = value
+      this.$router.push({
+        path: '/member/userHome',
+        query: {userClick: value}
+      })
+    },
     deleteGroupType (index) {
       console.log(index)
       this.newGroupForm.type.splice(index, 1)
@@ -336,22 +350,31 @@ export default {
       console.log(keyPath)
     },
     handleSelect (key, keyPath) {
+      console.log(key,keyPath)
       switch (keyPath[0]) {
         case '1': this.contenter = [true, false, false]; break
         case '2': this.contenter = [false, true, false]; break
         case '3': this.contenter = [false, false, true]; break
       }
-      if (keyPath !== undefined) {
-        if (keyPath.length>1){
-          let id = keyPath[1]
-          this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: id}})
+      if (key !== undefined) {
+          this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: key}})
             .then(res => {
               console.log(res)
               this.tableData = res.data.data.userList
-              this.key = id
+              this.key = key
             })
-        }
       }
+      // if (keyPath !== undefined) {
+      //   if (keyPath.length>1){
+      //     let id = keyPath[1]
+      //     this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: id}})
+      //       .then(res => {
+      //         console.log(res)
+      //         this.tableData = res.data.data.userList
+      //         this.key = id
+      //       })
+      //   }
+      // }
       console.log(key)
     },
     logOut () {

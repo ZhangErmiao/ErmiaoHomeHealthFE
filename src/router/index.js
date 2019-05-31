@@ -8,6 +8,7 @@ import Set from '@/components/Set'
 import Member from '@/components/Member'
 import Registered from '@/components/Registered'
 import HeartTest from '@/components/HeartTest'
+import UserHome from '@/components/UserHome'
 // import {ls} from '../store/pageStore.js'
 Vue.use(Router)
 
@@ -49,6 +50,11 @@ const router = new Router({
       component: HeartTest
     },
     {
+      path: '/member/userHome',
+      name: 'UserHome',
+      component: UserHome
+    },
+    {
       path: '/help',
       name: 'Help',
       component: Help
@@ -68,6 +74,9 @@ router.beforeEach((to, from, next) => {
     if (user && nowTime < time) {
       next()
     } else {
+      localStorage.removeItem('Authorization')
+      localStorage.removeItem('userMessage')
+      localStorage.removeItem('userTime')
       next('/login')
     }
   }
