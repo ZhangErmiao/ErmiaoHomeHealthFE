@@ -3,7 +3,7 @@
     <el-header style="padding:0">
       <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelectHeader" >
         <el-menu-item index="1">
-          <img src="../assets/tt.png" style="width:150px; height: 53px ">
+          <img src="../assets/tt.jpg" style="width:150px; height: 53px ">
         </el-menu-item>
         <el-menu-item index="2">首页</el-menu-item>
         <el-menu-item index="3">购买</el-menu-item>

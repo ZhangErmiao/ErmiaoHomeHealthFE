@@ -59,21 +59,21 @@
                   <el-form-item   label="群组名称" prop="name">
                     <el-input  placeholder="请输入群组名称" v-model.number="newGroupForm.name"></el-input>
                   </el-form-item>
-                  <el-form-item   label="数据类型" prop="type" style="text-align: left">
-                    <template v-for="(item, index) in newGroupForm.type">
-                      <el-input maxlength="10"
-                                 show-word-limit
-                                :key="index"
-                                 placeholder="请输入类型名称" v-model.number="newGroupForm.type[index]" style="max-width: 160px"></el-input>
-                      <i :key="index" class="el-icon-close" @click="deleteGroupType(index)"></i>
-                    </template>
-                    <el-button type="text" @click="addDataType" style="padding-top:0">
-                      <i class="el-icon-edit"></i>添加数据类型
-                    </el-button>
-                  </el-form-item>
+<!--                  <el-form-item   label="数据类型" prop="type" style="text-align: left">-->
+<!--                    <template v-for="(item, index) in newGroupForm.type">-->
+<!--                      <el-input maxlength="10"-->
+<!--                                 show-word-limit-->
+<!--                                :key="index"-->
+<!--                                 placeholder="请输入类型名称" v-model.number="newGroupForm.type[index]" style="max-width: 160px"></el-input>-->
+<!--                      <i :key="index" class="el-icon-close" @click="deleteGroupType(index)"></i>-->
+<!--                    </template>-->
+<!--                    <el-button type="text" @click="addDataType" style="padding-top:0">-->
+<!--                      <i class="el-icon-edit"></i>添加数据类型-->
+<!--                    </el-button>-->
+<!--                  </el-form-item>-->
                   <el-form-item>
                     <el-button type="primary" @click="submitForm('newGroupForm')">创建</el-button>
-                    <el-button @click="resetFormName('newGroupForm')">重置</el-button>
+                    <el-button @click="resetForm('newGroupForm')">重置</el-button>
                   </el-form-item>
                 </el-form>
               </el-main>
@@ -88,17 +88,34 @@
                   <el-breadcrumb-item>家庭成员管理</el-breadcrumb-item>
                   <el-breadcrumb-item>创建群组</el-breadcrumb-item>
                 </el-breadcrumb>
+                <span></span>
               </el-header>
               <el-main>
-                <el-form :model="searchGroupForm" :rules="rules" status-icon ref="searchGroupForm" label-width="100px">
+                <el-form :model="searchGroupForm" :rules="rules" status-icon ref="searchGroupForm" >
                   <el-form-item   label="群组ID" prop="id">
-                    <el-input  placeholder="请输入群组id" v-model.number="searchGroupForm.id"></el-input>
+                    <el-input  placeholder="请输入群组id" v-model="searchGroupForm.id"></el-input>
                   </el-form-item>
                   <el-form-item>
                     <el-button type="primary" @click="searchForm('searchGroupForm')">搜索</el-button>
-                    <el-button @click="resetFormId('searchGroupForm')">重置</el-button>
+                    <el-button @click="resetForm('searchGroupForm')">重置</el-button>
                   </el-form-item>
                 </el-form>
+                <template v-if="searchGroupResultShow">
+                  <el-divider>搜索结果</el-divider>
+                  <el-table :data="searchGroupResult" height="200px" >
+                    <el-table-column prop="id" label="群组ID" >
+                    </el-table-column>
+                    <el-table-column prop="name" label="群组名称" >
+                    </el-table-column>
+                    <el-table-column prop="deleted" label="Delete">
+                    </el-table-column>
+                    <el-table-column prop="change" label="操作">
+                      <template slot-scope="scope">
+                        <el-button type="text" size="small" >加入群组</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </template>
               </el-main>
             </el-container>
           </template>
@@ -110,7 +127,10 @@
                   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                   <el-breadcrumb-item>家庭成员管理</el-breadcrumb-item>
                 </el-breadcrumb>
-                <i class="el-icon-plus" @click="addUser"></i>
+                <b>GroupID: {{gid}}</b>
+                <el-button type="text" @click="addUser">
+                  <i class="el-icon-plus" >添加用户</i>
+                </el-button>
               </el-header>
               <el-main style="padding-top: 0">
                 <el-table :data="tableData" height="550px" @cell-click="toUserHome">
@@ -145,19 +165,13 @@
         </el-container>
       </el-main>
     </el-container>
-    <user-home :user-click="userClick"></user-home>
   </div>
 </template>
 
 <script>
-  /* eslint-disable */
-  import userHome from './userHome.vue'
-
+/* eslint-disable */
   export default {
   name: 'Member',
-  components:{
-    userHome
-  },
   data () {
     let checkName = (rule, value, callback) => {
       if (!value) {
@@ -180,13 +194,22 @@
         type:[]
       },
       searchGroupForm: {
-        id: ''
+        id: '',
+        name:'',
+        deleted:''
       },
+      searchGroupResultShow: false,
+      searchGroupResult:[{
+        id: '10050',
+        name:'ermiao',
+        deleted:'0'
+      }],
       rules: {
         name: [{ validator: checkName, trigger: 'blur' }]
       },
       contenter: [true, false, false],
       username: JSON.parse(localStorage.getItem('userMessage')).username,
+      gid:'',
       tableData: [{date: '2016-05-02',
         name: '丁小海',
         render: '男',
@@ -204,8 +227,6 @@
       currentPage3: 5,
       currentPage4: 4
     }
-  },
-  watch: {
   },
   methods: {
     toUserHome (value) {
@@ -225,11 +246,11 @@
       console.log('newGroupType:', this.newGroupForm.type)
     },
     userDelete (obj) {
-      console.log({id: this.key, uid: obj.id})
+      console.log({id: this.gid, uid: obj.id})
       if (obj.id === JSON.parse(localStorage.getItem('userMessage')).id){
         this.$message('不可以删除自己哦')
       } else {
-        this.$http.delete('http://39.105.193.111:5000/group/user',{data:{'id': this.key, 'uid': obj.id}})
+        this.$http.delete('http://39.105.193.111:5000/group/user',{data:{'id': this.gid, 'uid': obj.id}})
           .then(res => {
             this.tableData = this.tableData.filter((item) => {return item.id !== obj.id})
             console.log(res)
@@ -264,13 +285,13 @@
               if (res.status === 200) {
                if ( res.data) {
                 this.$http.post('http://39.105.193.111:5000/group/user', {
-                  "id": this.key,
+                  "id": this.gid,
                   "users": [
                     {"id": res.data.id}
                   ]
-                }).then(() => {
+                }).then(() => { // 不要直接push,要重新获取group的userList再复制给tableData
                   this.tableData.push({username: value, id: res.data.id})
-                  console.log("用户添加成功", this.key)
+                  console.log("用户添加成功", this.gid)
                 })
               } else {
                  this.$message('该用户不存在')
@@ -295,12 +316,22 @@
         })
     },
     searchForm (formId) {
-      this.$http.get('http://39.105.193.111:5000/group/', {params: {id: formId}})
+      this.$refs[formId].validate((valid) => {
+        if (valid) {
+          console.log('输入的群组id:', this.searchGroupForm)
+      this.$http.get('http://39.105.193.111:5000/group/', {params: {id: this.searchGroupForm.id}})
         .then(res => {
-          console.log(res)
+          console.log('searchID的返回值：', res)
+          // this.searchGroupForm = res.data.data 不能直接复制，后来添加的属性不能动态更新要用vue.set
+          this.$set(this.searchGroupResult, 0, res.data.data)
+          console.log('searchGroupForm: ', this.searchGroupResult)
+          this.searchGroupResultShow = true
         }).catch(err => {
           console.log(err)
-      }).finally(() => {this.resetFormId(formId)})
+      }).finally(() => {this.resetForm(formId)})
+
+        }
+      })
     },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
@@ -318,7 +349,7 @@
                   message: '群组创建成功！',
                   type: 'success'
                 })
-                this.resetFormName(formName)
+                this.resetForm(formName)
                 // this.$router.push('/member')
                 //这个地方要添加发送grouptype的请求
               } else {
@@ -361,34 +392,10 @@
             .then(res => {
               console.log(res)
               this.tableData = res.data.data.userList
-              this.key = key
+              this.gid = key
             })
       }
-      // if (keyPath !== undefined) {
-      //   if (keyPath.length>1){
-      //     let id = keyPath[1]
-      //     this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: id}})
-      //       .then(res => {
-      //         console.log(res)
-      //         this.tableData = res.data.data.userList
-      //         this.key = id
-      //       })
-      //   }
-      // }
-      console.log(key)
-    },
-    logOut () {
-      this.$http({
-        method: 'post',
-        url: 'http://39.105.193.111:5000/user/logout'
-      })
-        .then(res => {
-          console.log('注销成功', res)
-          localStorage.removeItem('user')
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      console.log('groupID:', key)
     },
     handleOpen (key, keyPath) { // 暂时没用
       if (key === '3') {
@@ -408,11 +415,8 @@
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     },
-    resetFormName (formName) {
+    resetForm (formName) {
       this.$refs[formName].resetFields()
-    },
-    resetFormId (formId) {
-      this.$refs[formId].resetFields()
     }
   }
 }

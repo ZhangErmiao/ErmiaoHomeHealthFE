@@ -3,7 +3,7 @@
     <el-header style="padding:0">
     <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelectHeader" style="padding: 0">
       <el-menu-item index="9">
-        <img src="../assets/tt.png" style="width:150px; height: 55px ">
+        <img src="../assets/tt.jpg" style="width:150px; height: 55px ">
       </el-menu-item>
       <el-menu-item index="1">首页</el-menu-item>
       <el-menu-item index="7">购买</el-menu-item>
@@ -34,11 +34,11 @@
 <!--                </el-button>-->
           <el-dialog title="添加数据值" :visible.sync="dialogFormVisible">
             <el-form :model="addDataForm">
-              <el-form-item label="数据类型" :label-width="formLabelWidth">
-                <el-select v-model="addDataForm.tid" placeholder="请选择数据类型">
-                  <el-option v-for="item in typeTabs" :label="item.typeName" :value="item.id" :key="item.id"></el-option>
-                </el-select>
-              </el-form-item>
+<!--              <el-form-item label="数据类型" :label-width="formLabelWidth">-->
+<!--                <el-select v-model="addDataForm.tid" placeholder="请选择数据类型">-->
+<!--                  <el-option v-for="item in typeTabs" :label="item.typeName" :value="item.id" :key="item.id"></el-option>-->
+<!--                </el-select>-->
+<!--              </el-form-item>-->
               <el-form-item label="数据值" :label-width="formLabelWidth">
                 <el-input v-model="addDataForm.value" autocomplete="off"></el-input>
               </el-form-item>
@@ -58,6 +58,7 @@
             :options="groupOptions"
             v-model="selectedOptions.gid"
             @change="handleGroupChange"
+            placeholder="请选择要显示的群组"
           >
           </el-cascader>
           <span>选择用户</span>
@@ -66,6 +67,16 @@
             :options="userOptions"
             v-model="selectedOptions.uid"
             @change="handleUserChange"
+            placeholder="请选择要显示的用户"
+          >
+          </el-cascader>
+          <span>选择数据类型</span>
+          <el-cascader
+            expand-trigger="hover"
+            :options="typeOptions"
+            v-model="selectedOptions.type"
+            @change="handleUserChange"
+            placeholder="请选择要显示的数据类型"
           >
           </el-cascader>
           <div style="display: inline-block;margin:0 30px">
@@ -81,30 +92,13 @@
               :picker-options="pickerOptions">
             </el-date-picker>
           </div>
-          <el-button type="button" @click="open">搜索</el-button>
+          <el-button type="button" @click="searchDatas">搜索</el-button>
         </el-form>
       </div>
       <div>
         <el-divider>用户数据显示</el-divider>
         <div v-if="show">
-          <div style="height: 104px; background-color: #333333;margin-bottom: 20px;display: flex;color:ghostwhite;justify-content: space-around;align-content: center">
-            <div
-              v-for="(item, index) in showData"
-              :key = 'index'>
-              <p>{{item[item.length-1].typeName}}</p>
-              <h2>0.13/Hz</h2>
-            </div>
-          </div>
-          <el-row  :gutter="20">
-            <el-col :span="12"  v-for="item in typeTabs"
-                    :key="item.id"
-                    :label="item.typeName"
-                    :name="typeTabs.indexOf(item).toString()"
-            >
-              <div class="Echart" :id="getID(item.id)" :key="item.id"></div>
-              <p>{{item.typeName}}</p>
-            </el-col>
-          </el-row>
+          <div class="Echart" id="echart"></div>
         </div>
         <p v-else style="line-height: 400px;font-size: 18px;color: gainsboro">未选择数据显示用户和时间</p>
       </div>
@@ -113,12 +107,9 @@
 </template>
 
 <script>
-// import heartTestBreath from './heartTest_breath.vue' // 子组件不用了
+/* eslint-disable */
 export default {
   name: 'HeartTest',
-  // components: {
-  //   'heartTestBreath': heartTestBreath
-  // },
   data () {
     return {
       show: false,
@@ -156,9 +147,11 @@ export default {
       },
       groupOptions: [],
       userOptions: [],
+      typeOptions: [],
       selectedOptions: {
         gid: [],
-        uid: []
+        uid: [],
+        type:[]
       },
       dialogFormVisible: false,
       addDataForm: {
@@ -193,29 +186,15 @@ export default {
       })
   },
   methods: {
-    open () {
+    searchDatas () {
+      console.log('search：', this.selectedOptions)
       this.show = true
-      this.$http.get('http://39.105.193.111:5000/type/all', {params: {gid: this.selectedOptions.gid[0]}}) // 获取类型
+      this.$http.get('http://39.105.193.111:5000/sensor', {params: {tid: this.selectedOptions.type[0], uid: this.selectedOptions.uid[0]}})
         .then(res => {
-          console.log('数据类型：', res)
-          this.typeTabs = res.data.data
-          return Promise.all(this.typeTabs.map((item, index) => { // 问题：多个http请求按顺序发，用forEach时回调函数不知道哪一个先返回，数据混乱
-            console.log(item, index)
-            return this.$http.get('http://39.105.193.111:5000/sensor', {params: {tid: item.id, uid: this.selectedOptions.uid[0]}})
-              .then(res => {
-                let list = []
-                for (let i = 0; i < res.data.data.length; i++) {
-                  list.push(res.data.data[i].value)
-                }
-                this.myChart[index] = this.$echarts.init(document.getElementById(this.getID(item.id)), 'macarons')
-                list.push(item)
-                return list
-              })
-          }))
-        }).then(res => {
-          console.log('new:', res)
-          this.showData = res
-          this.showData.map((item, index) => {
+          console.log('search res: ', res)
+          if (res.data.code === 200) {
+            this.showData = res.data.data
+            this.myChart = this.$echarts.init(document.getElementById('echart'), 'macarons')
             this.option = {
               tooltip: {
                 trigger: 'axis'
@@ -264,33 +243,133 @@ export default {
                 {
                   name: '呼吸值',
                   type: 'line',
-                  data: item.slice(0, item.length - 1)
+                  data: this.showData
                   // data: item // 这样也能画图
                 }
               ]
             }
-            console.log('nn', item, index)
-            this.myChart[index].setOption(this.option)
+            this.myChart.setOption(this.option)
             window.onresize = function () {
               this.myChart.resize()
             }
-          })
+          }
         })
+      // this.$http.get('http://39.105.193.111:5000/type/all', {params: {gid: this.selectedOptions.gid[0]}}) // 获取类型
+      //   .then(res => {
+      //     console.log('数据类型：', res)
+      //     this.typeTabs = res.data.data
+      //     return Promise.all(this.typeTabs.map((item, index) => { // 问题：多个http请求按顺序发，用forEach时回调函数不知道哪一个先返回，数据混乱
+      //       console.log(item, index)
+      //       return this.$http.get('http://39.105.193.111:5000/sensor', {params: {tid: item.id, uid: this.selectedOptions.uid[0]}})
+      //         .then(res => {
+      //           let list = []
+      //           for (let i = 0; i < res.data.data.length; i++) {
+      //             list.push(res.data.data[i].value)
+      //           }
+      //           this.myChart[index] = this.$echarts.init(document.getElementById(this.getID(item.id)), 'macarons')
+      //           list.push(item)
+      //           return list
+      //         })
+      //     }))
+      //   }).then(res => {
+      //     console.log('new:', res)
+      //     this.showData = res
+      //     this.showData.map((item, index) => {
+      //       this.option = {
+      //         tooltip: {
+      //           trigger: 'axis'
+      //         },
+      //         toolbox: {
+      //           show: true,
+      //           y: 'top',
+      //           feature: {
+      //             magicType: {show: true, type: ['line', 'bar']},
+      //             restore: {show: true},
+      //             saveAsImage: {show: true}
+      //           }
+      //         },
+      //         grid: {
+      //           x: 40,
+      //           y: 28,
+      //           x2: 35,
+      //           y2: 40
+      //         },
+      //         calculable: true,
+      //         dataZoom: {
+      //           show: true,
+      //           realtime: true,
+      //           start: 0,
+      //           end: 20
+      //         },
+      //         xAxis: [
+      //           {
+      //             type: 'category',
+      //             boundaryGap: false,
+      //             data: function () {
+      //               var list = []
+      //               for (var i = 1; i <= 30; i++) {
+      //                 list.push('2019-03-' + i)
+      //               }
+      //               return list
+      //             }()
+      //           }
+      //         ],
+      //         yAxis: [
+      //           {
+      //             type: 'value'
+      //           }
+      //         ],
+      //         series: [
+      //           {
+      //             name: '呼吸值',
+      //             type: 'line',
+      //             data: item.slice(0, item.length - 1)
+      //             // data: item // 这样也能画图
+      //           }
+      //         ]
+      //       }
+      //       console.log('nn', item, index)
+      //       this.myChart[index].setOption(this.option)
+      //       window.onresize = function () {
+      //         this.myChart.resize()
+      //       }
+      //     })
+      //   })
     },
     handleGroupChange (value) {
       console.log(value)
-      this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: value}})
-        .then(res => {
-          console.log(res)
-          this.userOptions = []
-          res.data.data.userList.forEach(item => {
-            let userItem = {}
-            userItem.label = item.username
-            userItem.value = item.id
-            this.userOptions.push(userItem)
+      let http1 = () => {
+        this.$http.get('http://39.105.193.111:5000/group/user/all', {params: {id: value}})
+          .then(res => {
+            console.log(res)
+            this.userOptions = []
+            res.data.data.userList.forEach(item => {
+              let userItem = {}
+              userItem.label = item.username
+              userItem.value = item.id
+              this.userOptions.push(userItem)
+            })
+            console.log(this.selectedOptions)
           })
-          console.log(this.selectedOptions)
-        })
+      }
+      let http2 = () => {
+        this.$http.get('http://39.105.193.111:5000/type/all', {params: {gid: this.selectedOptions.gid[0]}}) // 获取类型
+          .then(res => {
+            console.log('数据类型：', res)
+            // this.$set(data, typeTabs, res.data.data)
+            this.typeOptions = []
+            res.data.data.forEach(item => {
+              let typeItem = {}
+              typeItem.label = item.typeName
+              typeItem.value = item.id
+              this.typeOptions.push(typeItem)
+            })
+            console.log('typeOptions: ', this.typeOptions)
+          })
+      }
+      Promise.all([http1(), http2()]).then(res => {
+        console.log('user and type:', res)
+      })
     },
     handleUserChange (value) {
       console.log('this:', value)
@@ -348,6 +427,5 @@ export default {
     height: 300px;
     margin-bottom: 20px;
     background-color: white;
-
   }
 </style>

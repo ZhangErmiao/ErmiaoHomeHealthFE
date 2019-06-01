@@ -62,7 +62,7 @@ const router = new Router({
   ]
 })
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login' || to.path === '/' || to.path === '/registered') {
+  if (to.path === '/login' || to.path === '/registered') {
     next()
   } else {
     let user = localStorage.getItem('Authorization')

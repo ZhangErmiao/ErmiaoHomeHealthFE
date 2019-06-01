@@ -3,7 +3,7 @@
     <el-header style="padding:0">
       <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelect" >
         <el-menu-item index="9">
-          <img src="../assets/tt.png" style="width:150px; height: 52px ">
+          <img src="../assets/tt.jpg" style="width:150px; height: 52px ">
         </el-menu-item>
         <el-menu-item index="1">首页</el-menu-item>
         <el-menu-item index="7">购买</el-menu-item>
@@ -77,10 +77,10 @@ export default {
       Token: localStorage.getItem('Authorization'),
       username: JSON.parse(localStorage.getItem('userMessage')).username,
       activeIndex: '1',
-      imagesbox: [{id: 0, idView: require('../assets/c1.png')},
+      imagesbox: [{id: 0, idView: require('../assets/c1.jpg')},
         {id: 1, idView: require('../assets/t.png')},
         {id: 2, idView: require('../assets/cc.jpg')},
-        {id: 3, idView: require('../assets/c2.png')}]
+        {id: 3, idView: require('../assets/c2.jpg')}]
     }
   },
   methods: {

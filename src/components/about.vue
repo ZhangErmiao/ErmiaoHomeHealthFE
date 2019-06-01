@@ -3,7 +3,7 @@
     <el-header style="padding:0">
       <el-menu :default-active="activeIndex"  mode="horizontal" @select="handleSelectHeader" >
         <el-menu-item index="9">
-          <img src="../assets/tt.png" style="width:150px; height: 53px ">
+          <img src="../assets/tt.jpg" style="width:150px; height: 53px ">
         </el-menu-item>
         <el-menu-item index="1">首页</el-menu-item>
         <el-menu-item index="7">购买</el-menu-item>
@@ -30,7 +30,7 @@
             XeThru can improve the quality of life, and personal comfort and safety, by enabling non-intrusive sensors that collect relevant data while preserving full privacy. The technology Novelda AS is a privately held, R&D driven, sensor company based in Norway and specializing in nanoscale wireless low-power technology for ultra-high resolution impulse radar.</p></el-col>
         </el-row>
       </div>
-      <img style="width: 100%" src="../assets/bbb.png" alt=""/>
+      <img style="width: 100%" src="../assets/bbb.jpg" alt=""/>
       <div style="margin:80px 120px; text-align: left;line-height: 30px">
         <p style="font-size: 30px;color: gray; ">Company Value</p>
         <p>Novelda AS is a privately held, R&D driven, sensor company based in Norway and specializing in nanoscale wireless low-power technology for ultra-high resolution impulse radar.</p>
